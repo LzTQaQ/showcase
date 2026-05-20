@@ -269,12 +269,55 @@ footer p{margin-bottom:4px}
 .section-center.in-view .section-sub{opacity:1;transform:translateY(0);transition-delay:.2s}
 
 @media(max-width:480px){
-  section{padding:60px 16px}
-  .hero{padding:100px 16px 60px}
-  .hero-stats{gap:24px}
+  section{padding:48px 16px}
+  .hero{padding:80px 16px 48px;min-height:92vh}
+  .hero h1{font-size:clamp(2rem,7vw,2.5rem)}
+  .hero p{font-size:1rem;margin-bottom:28px}
+  .hero-cta a{padding:11px 18px;font-size:14px}
+  .hero-stats{gap:16px;margin-top:40px}
+  .hero-stat .num{font-size:1.4rem}
+  .hero-stat .label{font-size:12px}
   .feature-grid{grid-template-columns:1fr}
   .tech-grid{grid-template-columns:repeat(2,1fr)}
-  .mockup-phone{width:240px}
+  .mockup-phone{width:220px}
+  .platform-showcase{gap:32px}
+  .section-title{font-size:clamp(1.3rem,5vw,1.8rem)}
+  .section-sub{font-size:.95rem;margin-bottom:28px}
+  .bento-card{padding:24px}
+  .bento-card .iw{width:40px;height:40px}
+  .feature-card{padding:24px}
+  .project-card{padding:24px}
+  .about-card{padding:28px}
+  .comp-item{padding:24px}
+  .ai-tool-card{padding:24px}
+  .chapter-divider{padding:48px 16px 24px}
+  .chapter-divider-title{font-size:1.3rem}
+  .transition-story{padding:28px}
+  .wf-step{min-width:120px;padding:20px 16px}
+  .wf-step .icon{font-size:22px}
+  .flow-grid{grid-template-columns:1fr}
+  .about-card p{font-size:.88rem}
+  .skill-tags span{font-size:12px;padding:5px 12px}
+  .mockup-browser .bar{padding:10px 14px}
+  .mockup-browser .bar .url{font-size:11px}
+  .chat-m{padding:12px}
+  .chat-m .welcome{padding:12px 0}
+  .chat-m .welcome h4{font-size:16px}
+  .chat-m .sg{gap:6px}
+  .chat-m .sg .sc{padding:8px 12px}
+  .chat-m .msg .b{font-size:12px;padding:8px 12px}
+  .hero-bg .g1{width:400px;height:400px}
+  .hero-bg .g2{width:350px;height:350px}
+  .arch-node{padding:14px 16px;min-width:100px}
+  .arch-node .name{font-size:12px}
+  .arch-node .desc{font-size:10px}
+  .arch-arrow svg{width:18px;height:18px}
+  .arch-flow{gap:10px;min-width:600px}
+  .tech-card{padding:16px 12px}
+  .tech-card .iw{height:36px;font-size:22px}
+  .tech-card h4{font-size:12px}
+  #about div[style*="repeat(4,"]{grid-template-columns:repeat(2,1fr)!important}
+  #about div[style*="1fr 1fr"]{grid-template-columns:1fr!important}
 }
 
 /* Dark mode */
