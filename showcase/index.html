@@ -14,7 +14,7 @@
   --shadow-hover:0 8px 24px rgba(0,0,0,0.12);--shadow-elevated:0 20px 60px rgba(0,0,0,0.15);
   --font:-apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue','Segoe UI',sans-serif;
   --ease-apple:cubic-bezier(0.25,0.1,0.25,1);--radius-xl:16px;--radius-2xl:24px}
-html{scroll-behavior:smooth;font-size:16px}
+html{scroll-behavior:smooth;font-size:16px;overflow-x:hidden}
 body{font-family:var(--font);background:var(--surface);color:var(--text-primary);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6}
 ::selection{background:var(--accent);color:#fff}
 
@@ -504,7 +504,7 @@ footer p{margin-bottom:4px}
   <div class="reveal" style="margin-top:24px;padding:16px 20px;background:var(--card);border-radius:var(--radius-xl);border:1px solid var(--border);font-size:.85rem;color:var(--text-secondary);line-height:1.7">
     <strong style="color:var(--text-primary)">📋 关于 ICP 备案与域名：</strong>
     微信小程序发布需要完成 ICP 备案（互联网信息服务备案），目前备案正在办理中。
-    网页端通过腾讯云轻量服务器（162.14.105.253:8765）使用非标准端口规避备案要求，
+    网页端通过腾讯云轻量服务器（公网 IP）使用非标准端口规避备案要求，
     搭配 Tailscale WireGuard 隧道穿透至内网 NAS，已实现公网可访问。
   </div>
 </section>
@@ -626,7 +626,7 @@ footer p{margin-bottom:4px}
       <h3>腾讯云反向代理 + Tailscale 公网穿透</h3>
       <p>前端部署在家庭 NAS，通过腾讯云轻量服务器 + Tailscale WireGuard 隧道实现公网访问。非标准端口 8765 规避 ICP 备案限制，SSE 流式响应完美支持。</p>
       <ul>
-        <li>腾讯云轻量服务器 2C4G（162.14.105.253）</li>
+        <li>腾讯云轻量服务器 2C4G（公网 IP）</li>
         <li>Tailscale WireGuard 隧道加密传输</li>
         <li>Nginx 反向代理配置 SSE 支持（proxy_buffering off）</li>
         <li>非标准端口 :8765，无需 ICP 备案即可公网服务</li>
