@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>刘朕廷 · AI 落地实践者 — 作品集</title>
+<meta name="description" content="刘朕廷 · 从医疗销售到AI落地实践者 · 个人作品集 · AI Agent系统搭建、浏览器自动化、医疗知识库">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --surface:#F5F5F7;--card:#FFFFFF;--text-primary:#1D1D1F;--text-secondary:#86868B;
+  --text-tertiary:#AEAEB2;--accent:#D90000;--accent-hover:rgba(217,0,0,0.08);
+  --border:rgba(198,198,200,0.3);--shadow-card:0 2px 12px rgba(0,0,0,0.08);
+  --shadow-hover:0 8px 24px rgba(0,0,0,0.12);--shadow-elevated:0 20px 60px rgba(0,0,0,0.15);
+  --font:-apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue','Segoe UI',sans-serif;
+  --ease-apple:cubic-bezier(0.25,0.1,0.25,1);--radius-xl:16px;--radius-2xl:24px}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font);background:var(--surface);color:var(--text-primary);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6}
+::selection{background:var(--accent);color:#fff}
+
+/* Nav */
+nav#navbar{
+  position:fixed;top:0;left:0;right:0;height:56px;background:rgba(255,255,255,.85);
+  backdrop-filter:saturate(180%) blur(20px);z-index:100;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+  transition:transform .3s var(--ease-apple)}
+nav#navbar.hidden{transform:translateY(-100%)}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;color:var(--text-primary)}
+.nav-logo svg{width:28px;height:28px}
+.nav-links{display:flex;gap:8px;list-style:none}
+.nav-links a{
+  padding:6px 14px;border-radius:8px;font-size:13px;color:var(--text-secondary);
+  transition:all .2s var(--ease-apple);white-space:nowrap}
+.nav-links a:hover{background:var(--accent-hover);color:var(--accent)}
+.mobile-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:8px;color:var(--text-primary)}
+@media(max-width:768px){
+  .nav-links{display:none;position:absolute;top:56px;left:0;right:0;background:rgba(255,255,255,.98);
+    flex-direction:column;padding:12px;border-bottom:1px solid var(--border);gap:4px}
+  .nav-links.open{display:flex}
+  .mobile-menu-btn{display:block}
+}
+
+/* Hero */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-bg .g1{position:absolute;top:-20%;right:-10%;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(217,0,0,.06) 0%,transparent 70%);border-radius:50%}
+.hero-bg .g2{position:absolute;bottom:-30%;left:-10%;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(217,0,0,.04) 0%,transparent 70%);border-radius:50%}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 16px 6px 8px;
+  background:var(--accent-hover);border:1px solid rgba(217,0,0,.15);border-radius:100px;
+  font-size:13px;color:var(--accent);font-weight:500;margin-bottom:24px}
+.hero h1{
+  font-size:clamp(2.5rem,6vw,4.5rem);font-weight:700;letter-spacing:-.03em;
+  line-height:1.08;margin-bottom:20px}
+.hero h1 .gradient{
+  background:linear-gradient(135deg,#1D1D1F 0%,#666 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{
+  font-size:clamp(1.05rem,2vw,1.35rem);color:var(--text-secondary);max-width:640px;
+  line-height:1.6;margin-bottom:40px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.hero-cta a{
+  display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:var(--radius-xl);
+  font-size:15px;font-weight:500;transition:all .25s var(--ease-apple);text-decoration:none}
+.hero-cta .primary{background:var(--accent);color:#fff;box-shadow:var(--shadow-card)}
+.hero-cta .primary:hover{background:#c20000;transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.hero-cta .secondary{background:var(--card);color:var(--text-primary);border:1px solid var(--border)}
+.hero-cta .secondary:hover{background:var(--surface);transform:translateY(-2px);box-shadow:var(--shadow-card)}
+.hero-stats{display:flex;gap:48px;margin-top:60px;flex-wrap:wrap;justify-content:center}
+.hero-stat{text-align:center}
+.hero-stat .num{font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:-.02em}
+.hero-stat .label{font-size:13px;color:var(--text-secondary);margin-top:4px}
+
+/* Sections */
+section{padding:100px 24px;max-width:1200px;margin:0 auto}
+.section-label{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 14px;background:var(--accent-hover);
+  border-radius:100px;font-size:12px;font-weight:600;color:var(--accent);margin-bottom:16px}
+.section-title{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;letter-spacing:-.02em;
+  line-height:1.15;margin-bottom:16px}
+.section-sub{font-size:clamp(1rem,1.5vw,1.15rem);color:var(--text-secondary);max-width:600px;
+  line-height:1.7;margin-bottom:48px}
+.section-center{text-align:center}
+.section-center .section-sub{margin-left:auto;margin-right:auto}
+
+/* Background Bento */
+.bento-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.bento-card{background:var(--card);border-radius:var(--radius-2xl);padding:36px;
+  border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)}
+.bento-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.bento-card .iw{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.bento-card h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}
+.bento-card p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+.bento-card.full{grid-column:1/-1}
+@media(max-width:768px){.bento-grid{grid-template-columns:1fr}}
+
+/* Feature Cards */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.feature-card{
+  background:var(--card);border-radius:var(--radius-2xl);padding:32px;border:1px solid var(--border);
+  box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)}
+.feature-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-3px)}
+.feature-card .iw{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;background:var(--accent-hover)}
+.feature-card .iw svg{width:22px;height:22px;color:var(--accent)}
+.feature-card h3{font-size:1.05rem;font-weight:600;margin-bottom:8px}
+.feature-card p{font-size:.88rem;color:var(--text-secondary);line-height:1.7}
+.feature-card .tag{display:inline-block;margin-top:12px;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:var(--accent-hover);color:var(--accent)}
+
+/* Platform Mockups */
+.platform-showcase{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.platform-item{text-align:center}
+.platform-item h3{font-size:1.15rem;font-weight:600;margin-bottom:4px}
+.platform-item .sub{font-size:.85rem;color:var(--text-secondary);margin-bottom:20px}
+.mockup-browser{background:#fff;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-elevated);border:1px solid var(--border);text-align:left;width:100%;max-width:480px;margin:0 auto}
+.mockup-browser .bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#F5F5F7;border-bottom:1px solid var(--border)}
+.mockup-browser .bar .dots{display:flex;gap:6px}
+.mockup-browser .bar .dots span{width:10px;height:10px;border-radius:50%}
+.mockup-browser .bar .url{flex:1;background:#fff;padding:6px 12px;border-radius:8px;font-size:12px;color:var(--text-secondary);text-align:center}
+.mockup-phone{width:280px;margin:0 auto;background:#fff;border-radius:40px;overflow:hidden;box-shadow:var(--shadow-elevated);border:1px solid var(--border);position:relative}
+.mockup-phone .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:24px;background:#1D1D1F;border-radius:0 0 16px 16px;z-index:2}
+.mockup-phone .sb{display:flex;justify-content:space-between;padding:12px 20px 8px;font-size:12px;font-weight:600}
+.mockup-phone .content{padding:8px 12px 20px}
+.chat-m{padding:16px}
+.chat-m .welcome{text-align:center;padding:20px 0 16px}
+.chat-m .welcome h4{font-size:18px;font-weight:600;margin-bottom:4px}
+.chat-m .welcome p{font-size:13px;color:var(--text-secondary)}
+.chat-m .sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.chat-m .sg .sc{background:#F5F5F7;border-radius:12px;padding:10px 14px;text-align:left;border:1px solid rgba(198,198,200,.2)}
+.chat-m .sg .sc .l{font-size:11px;font-weight:600;margin-bottom:2px}
+.chat-m .sg .sc .q{font-size:11px;color:var(--text-secondary)}
+.chat-m .msg{display:flex;margin-bottom:12px;animation:fadeInUp .3s both}
+.chat-m .msg.ar{justify-content:flex-end}
+.chat-m .msg .b{max-width:80%;padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.5}
+.chat-m .msg.ar .b{background:var(--accent);color:#fff;border-radius:16px 16px 4px 16px}
+.chat-m .msg.ai .b{background:#fff;color:var(--text-primary);border:1px solid var(--border);border-radius:16px 16px 16px 4px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.chat-m .msg.ai .b .al{font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;display:block}
+.chat-m .ia{display:flex;gap:8px;padding:8px 0;border-top:1px solid var(--border);margin-top:8px}
+.chat-m .ia .f{flex:1;height:40px;background:#F5F5F7;border-radius:20px;border:1px solid var(--border);padding:0 16px;font-size:13px;color:#1D1D1F;outline:none}
+.chat-m .ia .sb{width:40px;height:40px;border-radius:50%;background:var(--accent);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.mp-chat .msg{margin-bottom:10px;animation:fadeInUp .3s both}
+.mp-chat .msg.ar{text-align:right}
+.mp-chat .msg .b{display:inline-block;max-width:85%;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.5;text-align:left}
+.mp-chat .msg.ar .b{background:var(--accent);color:#fff;border-radius:12px 12px 4px 12px}
+.mp-chat .msg.ai .b{background:#F5F5F7;color:var(--text-primary);border-radius:12px 12px 12px 4px}
+.mp-chat .msg.ai .b .al{font-size:10px;font-weight:600;color:var(--accent);display:block;margin-bottom:2px}
+.mp-chat .ib{display:flex;gap:6px;padding:8px 0;border-top:1px solid var(--border);margin-top:8px}
+.mp-chat .ib input{flex:1;height:34px;background:#F5F5F7;border-radius:20px;border:none;padding:0 14px;font-size:12px;outline:none}
+.mp-chat .ib button{width:34px;height:34px;border-radius:50%;background:var(--accent);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+@media(max-width:768px){.platform-showcase{grid-template-columns:1fr;gap:48px}}
+
+/* Architecture */
+.arch-diagram{overflow:hidden;border-radius:var(--radius-2xl);border:1px solid var(--border);box-shadow:var(--shadow-card);padding:0;position:relative}.arch-diagram-inner{overflow-x:auto;padding:48px 32px}@media(max-width:768px){.arch-diagram-inner{padding:32px 16px}}
+.arch-scroll-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow-card);cursor:pointer;z-index:5;display:none;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .2s var(--ease-apple);padding:0}
+.arch-scroll-btn:hover{box-shadow:var(--shadow-hover);color:var(--text-primary)}
+.arch-scroll-btn.left{left:12px}
+.arch-scroll-btn.right{right:12px}
+.arch-scroll-btn.visible{display:flex}
+@media(max-width:768px){.arch-scroll-btn{width:28px;height:28px}.arch-scroll-btn.left{left:6px}.arch-scroll-btn.right{right:6px}}
+.arch-flow{display:flex;align-items:center;justify-content:flex-start;gap:16px;flex-wrap:nowrap;min-width:700px}
+.arch-node{flex-shrink:0;text-align:center;padding:20px 24px;border-radius:var(--radius-xl);min-width:120px}
+.arch-node .icon{width:40px;height:40px;margin:0 auto 10px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.arch-node .name{font-size:13px;font-weight:600;margin-bottom:2px}
+.arch-node .desc{font-size:11px;color:var(--text-secondary)}
+.arch-node.cli{background:#F5F5F7;border:1px solid var(--border)}
+.arch-node.cli .icon{background:var(--accent-hover)}
+.arch-node.cli .icon svg{width:20px;height:20px;color:var(--accent)}
+.arch-node.gw{background:linear-gradient(135deg,#F5F5F7,#fff);border:1px solid var(--border)}
+.arch-node.gw .icon{background:rgba(0,122,255,.1)}
+.arch-node.gw .icon svg{width:20px;height:20px;color:#007AFF}
+.arch-node.core{background:linear-gradient(135deg,rgba(217,0,0,.05),rgba(217,0,0,.1));border:1px solid rgba(217,0,0,.2)}
+.arch-node.core .icon{background:var(--accent-hover)}
+.arch-node.core .icon svg{width:20px;height:20px;color:var(--accent)}
+.arch-node.ai-box{background:linear-gradient(135deg,rgba(0,122,255,.05),rgba(0,122,255,.1));border:1px solid rgba(0,122,255,.2)}
+.arch-node.ai-box .icon{background:rgba(0,122,255,.1)}
+.arch-node.ai-box .icon svg{width:20px;height:20px;color:#007AFF}
+.arch-node.ext{background:#F5F5F7;border:1px solid var(--border);border-style:dashed}
+.arch-node.ext .icon{background:rgba(0,0,0,.05)}
+.arch-node.ext .icon svg{width:20px;height:20px;color:var(--text-tertiary)}
+.arch-arrow{flex-shrink:0;color:var(--text-tertiary);font-size:18px}
+.arch-arrow svg{width:24px;height:24px;display:block}
+@media(max-width:768px){.arch-diagram{padding:32px 16px}}
+.arch-diagram-inner::-webkit-scrollbar{height:0;display:none}
+.arch-diagram-inner{scrollbar-width:none;-ms-overflow-style:none}
+
+/* Tech Grid */
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
+.tech-card{background:var(--card);border-radius:var(--radius-xl);padding:20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)}
+.tech-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.tech-card .iw{height:44px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:28px}
+.tech-card h4{font-size:13px;font-weight:600;margin-bottom:2px}
+.tech-card p{font-size:11px;color:var(--text-secondary)}
+
+/* Compliance */
+.compliance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.comp-item{background:var(--card);border-radius:var(--radius-2xl);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)}
+.comp-item:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.comp-item .iw{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.comp-item h3{font-size:1rem;font-weight:600;margin-bottom:6px}
+.comp-item p{font-size:.85rem;color:var(--text-secondary);line-height:1.6}
+.comp-item ul{list-style:none;margin-top:8px}
+.comp-item li{font-size:.82rem;color:var(--text-secondary);padding:4px 0 4px 20px;position:relative}
+.comp-item li::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.5}
+
+/* AI Tools */
+.ai-tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.ai-tool-card{background:var(--card);border-radius:var(--radius-2xl);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)}
+.ai-tool-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.ai-tool-card .iw{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.ai-tool-card h3{font-size:1rem;font-weight:600;margin-bottom:4px}
+.ai-tool-card p{font-size:.85rem;color:var(--text-secondary);line-height:1.6}
+.ai-tool-card .tl{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ai-tool-card .tl span{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500;background:var(--accent-hover);color:var(--accent)}
+
+/* Workflow */
+.wf{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.wf-step{flex:1;min-width:140px;max-width:200px;background:var(--card);border-radius:var(--radius-xl);padding:24px 20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card);position:relative}
+.wf-step .num{position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.wf-step .icon{font-size:28px;margin-bottom:8px}
+.wf-step h4{font-size:.9rem;font-weight:600;margin-bottom:4px}
+.wf-step p{font-size:.8rem;color:var(--text-secondary);line-height:1.4}
+
+/* About */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+.about-card{background:var(--card);border-radius:var(--radius-2xl);padding:36px;border:1px solid var(--border);box-shadow:var(--shadow-card)}
+.about-card h3{font-size:1.2rem;font-weight:600;margin-bottom:16px}
+.about-card p{color:var(--text-secondary);line-height:1.8;font-size:.92rem;margin-bottom:12px}
+.skill-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.skill-tags span{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:500;background:var(--accent-hover);color:var(--accent);border:1px solid rgba(217,0,0,.1)}
+.ah{display:flex;gap:16px;padding:16px;border-radius:var(--radius-xl);background:var(--surface);margin-bottom:12px;align-items:flex-start}
+.ah .ic{width:40px;height:40px;border-radius:10px;background:var(--accent-hover);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ah .ic svg{width:20px;height:20px;color:var(--accent)}
+.ah h4{font-size:.9rem;font-weight:600;margin-bottom:2px}
+.ah p{font-size:.82rem;color:var(--text-secondary);margin:0;line-height:1.5}
+@media(max-width:768px){.about-grid{grid-template-columns:1fr}}
+
+/* Flow info boxes */
+.flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px}
+.flow-box{background:var(--card);border-radius:var(--radius-xl);padding:16px 20px;border:1px solid var(--border);font-size:.82rem;color:var(--text-secondary)}
+
+/* Footer */
+footer{text-align:center;padding:48px 24px;border-top:1px solid var(--border);color:var(--text-tertiary);font-size:13px}
+footer .fl{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px}
+footer p{margin-bottom:4px}
+
+/* Animations */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(30px);transition:all .6s var(--ease-apple)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}.d6{transition-delay:.6s}
+
+/* Hero entrance sequence */
+.hero .hero-badge{animation:heroIn .5s var(--ease-apple) both}
+.hero h1{animation:heroIn .5s var(--ease-apple) .1s both}
+.hero p{animation:heroIn .5s var(--ease-apple) .2s both}
+.hero-cta{animation:heroIn .5s var(--ease-apple) .3s both}
+.hero-stats{animation:heroIn .5s var(--ease-apple) .4s both}
+@keyframes heroIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Section header auto-reveal */
+.section-center .section-label,
+.section-center .section-title,
+.section-center .section-sub{opacity:0;transform:translateY(20px);transition:all .6s var(--ease-apple)}
+.section-center.in-view .section-label{opacity:1;transform:translateY(0);transition-delay:0s}
+.section-center.in-view .section-title{opacity:1;transform:translateY(0);transition-delay:.1s}
+.section-center.in-view .section-sub{opacity:1;transform:translateY(0);transition-delay:.2s}
+
+@media(max-width:480px){
+  section{padding:60px 16px}
+  .hero{padding:100px 16px 60px}
+  .hero-stats{gap:24px}
+  .feature-grid{grid-template-columns:1fr}
+  .tech-grid{grid-template-columns:repeat(2,1fr)}
+  .mockup-phone{width:240px}
+}
+
+/* Dark mode */
+
+/* Transition */
+.transition-story{background:var(--card);border-radius:var(--radius-2xl);padding:40px;border:1px solid var(--border);box-shadow:var(--shadow-card)}
+.transition-story h3{font-size:1.15rem;font-weight:600;margin-bottom:12px}
+.transition-story p{font-size:.92rem;color:var(--text-secondary);line-height:1.8}
+
+/* Project Cards */
+.project-card{background:var(--card);border-radius:var(--radius-2xl);padding:32px;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)}
+.project-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.project-card .icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.project-card h3{font-size:1.05rem;font-weight:600;margin-bottom:6px}
+.project-card .sub{font-size:.85rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.6}
+.project-card .desc{font-size:.85rem;color:var(--text-secondary);line-height:1.7;margin-bottom:12px}
+.project-card .tags{display:flex;flex-wrap:wrap;gap:6px}
+.project-card .tags span{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:var(--accent-hover);color:var(--accent)}
+
+/* Efficiency table */
+.eff-table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius-2xl);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-card)}
+.eff-table th{padding:14px 20px;text-align:left;font-size:.82rem;font-weight:600;color:var(--text-secondary);background:var(--surface);border-bottom:1px solid var(--border)}
+.eff-table td{padding:14px 20px;font-size:.88rem;border-bottom:1px solid var(--border)}
+.eff-table tr:last-child td{border-bottom:none}
+.eff-table .num{font-weight:600;color:var(--accent)}
+
+/* Timeline */
+.timeline{position:relative;padding:0;max-width:700px;margin:0 auto}
+.timeline::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;padding:0 0 32px 60px}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:16px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--accent);border:3px solid var(--surface);z-index:1}
+.tl-date{font-size:.78rem;font-weight:600;color:var(--accent);margin-bottom:4px}
+.tl-title{font-size:.95rem;font-weight:600;margin-bottom:4px}
+.tl-desc{font-size:.85rem;color:var(--text-secondary);line-height:1.6}
+
+
+/* Chapter Dividers */
+.chapter-divider{text-align:center;padding:80px 24px 40px;max-width:600px;margin:0 auto}
+.chapter-divider-line{width:32px;height:2px;background:var(--accent);margin:0 auto 20px;border-radius:2px;opacity:.5}
+.chapter-divider-label{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.15em;margin-bottom:8px;text-transform:uppercase}
+.chapter-divider-title{font-size:clamp(1.4rem,2.5vw,1.8rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.chapter-divider-sub{font-size:.9rem;color:var(--text-secondary);line-height:1.6;max-width:400px;margin:0 auto}
+
+@media(prefers-color-scheme:dark){
+  :root{--surface:#1C1C1E;--card:#2C2C2E;--text-primary:#F5F5F7;--text-secondary:#98989D;--text-tertiary:#636366;--border:rgba(255,255,255,.12);--accent-hover:rgba(217,0,0,.2);--shadow-card:0 2px 12px rgba(0,0,0,.3);--shadow-hover:0 8px 24px rgba(0,0,0,.4);--shadow-elevated:0 20px 60px rgba(0,0,0,.5)}
+  nav#navbar{background:rgba(44,44,46,.85)}
+  .mockup-browser{background:#1C1C1E;border-color:rgba(255,255,255,.1)}
+  .mockup-browser .bar{background:#2C2C2E}
+  .mockup-browser .bar .url{background:#1C1C1E;color:#98989D}
+  .mockup-phone{background:#1C1C1E;border-color:rgba(255,255,255,.1)}
+  .mockup-phone .notch{background:#000}
+  .chat-m .sg .sc{background:#2C2C2E}
+  .chat-m .msg.ai .b{background:#2C2C2E;border-color:rgba(255,255,255,.1)}
+  .chat-m .ia .f{background:#2C2C2E;color:#F5F5F7}
+  .arch-node.cli{background:#2C2C2E}
+  .arch-node.ext{background:#2C2C2E}
+  .ah{background:#3A3A3C}
+  .nav-links.open{background:rgba(44,44,46,.98)}
+  .mp-chat .msg.ai .b{background:#2C2C2E}
+  .mp-chat .ib input{background:#2C2C2E;color:#F5F5F7}
+  .hero h1 .gradient{background:linear-gradient(135deg,#F5F5F7 0%,#AEAEB2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .arch-node.gw{background:linear-gradient(135deg,#2C2C2E,#3A3A3C)}
+  .arch-node.core{background:linear-gradient(135deg,rgba(217,0,0,.15),rgba(217,0,0,.25))}
+  .arch-node.ai-box{background:linear-gradient(135deg,rgba(0,122,255,.15),rgba(0,122,255,.25))}
+  .comp-item li::before{opacity:.4}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <svg viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#D90000"/><g fill="none" stroke="#FFF" stroke-linecap="round"><rect x="226" y="100" width="60" height="24" rx="10" fill="#FFF" opacity=".92"/><line x1="256" y1="130" x2="130" y2="420" stroke-width="14" opacity=".82"/><line x1="256" y1="130" x2="382" y2="420" stroke-width="14" opacity=".82"/><path d="M130,420 A316 316 0 0 1 382 420" stroke-width="14" opacity=".82"/><path d="M186,290 Q256,345 326,290" stroke-width="9" opacity=".45"/><path d="M158,355 Q256,420 354,355" stroke-width="9" opacity=".45"/></g></svg>
+    <span>朕廷</span>
+  </div>
+  <button class="mobile-menu-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="菜单">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
+  </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#hero" onclick="document.getElementById('navLinks').classList.remove('open')">首页</a></li>
+        <li><a href="#ch1-ultrasound" onclick="document.getElementById('navLinks').classList.remove('open')">超声引擎</a></li>
+        <li><a href="#ch2-agent" onclick="document.getElementById('navLinks').classList.remove('open')">Agent 模块</a></li>
+        <li><a href="#about" onclick="document.getElementById('navLinks').classList.remove('open')">关于我</a></li>
+      </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero" class="hero">
+  <div class="hero-bg"><div class="g1"></div><div class="g2"></div></div>
+  <div class="hero-badge">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h0"/></svg>
+    用 AI 解决真实问题
+  </div>
+  <h1><span class="gradient">刘朕廷</span></h1>
+  <p>3 年迈瑞医疗超声设备销售 → AI 落地实践者。<br>将医疗器械行业 domain knowledge 与 AI 工程能力深度融合，构建从知识管理到实战落地的完整 AI 应用体系。</p>
+  <div class="hero-cta">
+    <a class="primary" href="#ch1-ultrasound">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 3 11 8 6 13"/></svg>
+      超声设备 AI 引擎
+    </a>
+    <a class="secondary" href="#ch2-agent">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="5" height="5" rx="1"/><rect x="9.5" y="1.5" width="5" height="5" rx="1"/><rect x="1.5" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/></svg>
+      Agent 系统
+    </a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">4</div><div class="label">Agent 集群</div></div>
+    <div class="hero-stat"><div class="num">14GB</div><div class="label">知识库资产</div></div>
+    <div class="hero-stat"><div class="num">60+</div><div class="label">专业 Agent</div></div>
+    <div class="hero-stat"><div class="num">7×24</div><div class="label">自动化运行</div></div>
+  </div>
+</section>
+
+<!-- Chapter: Ultrasound Engine -->
+<div class="chapter-divider" id="ch1-ultrasound">
+  <div class="chapter-divider-line"></div>
+  <div class="chapter-divider-label">Chapter 01</div>
+  <h2 class="chapter-divider-title">超声设备 AI 引擎</h2>
+  <p class="chapter-divider-sub">AI 驱动的企业级超声设备知识问答系统 — 从 RAG 知识库到多端部署</p>
+</div>
+
+<!-- Background -->
+<section id="background">
+  <div class="section-center">
+    <div class="section-label">Background</div>
+    <h2 class="section-title">为什么做这个项目？</h2>
+    <p class="section-sub">医疗设备行业知识密集，产品线繁多，销售和售后团队需要快速掌握大量技术参数和竞品信息。传统培训方式效率低，知识查找困难。</p>
+  </div>
+  <div class="bento-grid">
+    <div class="bento-card reveal d1">
+      <div class="iw" style="background:rgba(217,0,0,.08)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg>
+      </div>
+      <h3>行业痛点</h3>
+      <p>迈瑞内部销售与售后团队需要面对GE、飞利浦、西门子等多家品牌的数百款超声设备型号。传统培训依赖纸质手册和经验传授，知识获取效率低、成本高。</p>
+    </div>
+    <div class="bento-card reveal d2">
+      <div class="iw" style="background:rgba(217,0,0,.08)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>技术选型</h3>
+      <p>选择 Dify + DeepSeek 作为AI引擎，FastAPI 作为API网关，React + 微信小程序覆盖 Web 和移动端。核心设计理念：安全合规、多端一致、易维护。</p>
+    </div>
+    <div class="bento-card full reveal d3">
+      <div class="iw" style="background:rgba(217,0,0,.08)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3>项目成果</h3>
+      <p>一个生产级、已部署的企业内部AI知识问答系统。覆盖 Web 网页端、微信小程序端，支持 AI 对话、设备参数查询、文件上传分析、对话管理等功能。包含完整的认证授权、审计日志、合规过滤体系，已通过 Docker 部署至个人 UGREEN NAS（绿联 DXP4800Plus）。网页端（PC + 移动）已上线并开始小范围灰度测试，微信小程序端开发完成但因 ICP 备案暂缓发布</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features">
+  <div class="section-center">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">核心能力</h2>
+    <p class="section-sub">从AI对话到设备查询，从文件分析到多端覆盖，打造完整的知识学习体验</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card reveal"><div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="9" y1="11" x2="15" y2="11"/></svg></div><h3>AI 智能对话</h3><p>基于DeepSeek大模型 + RAG知识库，支持流式输出实时生成答案。涵盖设备参数查询、机型对比、技术概念解读等场景。</p><span class="tag">SSE 流式响应</span></div>
+    <div class="feature-card reveal d1"><div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3>多端全覆盖</h3><p>Web 端（PC + 移动）<span style="color:#34C759;font-weight:600">已上线</span>并灰度测试中，微信小程序<span style="color:#FF9500;font-weight:600">已开发完成</span>待ICP备案后发布。同一套后端 API 双端复用，UI 与交互体验保持一致。</p><span class="tag">Web 已上线 · 灰度测试</span><span class="tag">小程序开发完成</span></div>
+    <div class="feature-card reveal d2"><div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>文件上传分析</h3><p>支持PDF、DOCX、TXT文件上传，自动提取文字内容并由AI分析解读。上传前强制合规确认，后端文件类型+魔数双重校验。</p><span class="tag">PDF / DOCX / TXT</span></div>
+    <div class="feature-card reveal d1"><div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><h3>设备参数浏览</h3><p>内置迈瑞、GE、飞利浦、西门子、佳能、三星等主流品牌的超声设备参数数据库。支持按品牌、型号分类浏览和搜索。</p><span class="tag">6+ 品牌</span></div>
+    <div class="feature-card reveal d2"><div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/></svg></div><h3>对话管理</h3><p>多会话管理、AI自动生成标题、全文搜索、上下文菜单。会话本地加密存储，保护隐私。</p><span class="tag">搜索 + 管理</span></div>
+    <div class="feature-card reveal d3"><div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>安全合规体系</h3><p>JWT认证 + 白名单机制、AI输出合规过滤（15类禁用话术）、完整审计日志、速率限制、CORS安全头。全链路安全防护。</p><span class="tag">JWT / 审计 / 过滤</span></div>
+  </div>
+</section>
+
+<!-- Platform -->
+<section id="platform">
+  <div class="section-center">
+    <div class="section-label">Multi-Platform</div>
+    <h2 class="section-title">多端展示</h2>
+    <p class="section-sub">Web 端已上线（灰度测试中），微信小程序开发完成待 ICP 备案。同一后端 API，保持一致体验</p>
+  </div>
+  <div class="platform-showcase">
+    <div class="platform-item reveal d1">
+      <h3>Web 网页端</h3>
+      <p class="sub">React 19 + TypeScript + Tailwind CSS</p>
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 14px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);border-radius:100px;font-size:12px;font-weight:500;color:#34C759;margin-bottom:16px">✅ 已上线 · 灰度测试中</div>
+      <div class="mockup-browser">
+        <div class="bar">
+          <div class="dots"><span style="background:#FF5F57"/><span style="background:#FFBD2E"/><span style="background:#28C840"/></div>
+          <div class="url">超声设备AI引擎 · AI对话</div>
+        </div>
+        <div class="chat-m">
+          <div class="welcome"><h4>你好，张工</h4><p>我能为你做些什么？</p></div>
+          <div class="sg">
+            <div class="sc"><div class="l">参数对比</div><div class="q">迈瑞 Resona R9 与 GE LOGIQ E20 对比</div></div>
+            <div class="sc"><div class="l">概念解读</div><div class="q">剪切波弹性成像（SWE）是什么？</div></div>
+            <div class="sc"><div class="l">设备查询</div><div class="q">飞利浦 EPIQ 7 的探头配置</div></div>
+            <div class="sc"><div class="l">前沿技术</div><div class="q">超声超分辨成像（SRUS）技术原理</div></div>
+          </div>
+          <div class="msg ar"><div class="b">迈瑞昆仑 Resona R9 的探头配置有哪些？</div></div>
+          <div class="msg ai"><div class="b"><span class="al">超声设备AI引擎</span>迈瑞 Resona R9 的探头配置包括：<br><br><b>凸阵探头：</b>SC5-1U（腹部、妇产）<br><b>线阵探头：</b>L14-5WU（血管、小器官）<br><b>相控阵探头：</b>P10-4U（心脏）<br><b>腔内探头：</b>DC8-3E（经阴道/直肠）<br><b>容积探头：</b>D8-4U（四维容积成像）</div></div>
+          <div class="ia"><input class="f" type="text" placeholder="输入问题..." value="昆仑"><button class="sb"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+        </div>
+      </div>
+    </div>
+    <div class="platform-item reveal d2">
+      <h3>微信小程序端</h3>
+      <p class="sub">原生小程序 + Vant Weapp UI</p>
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 14px;background:rgba(255,149,0,.1);border:1px solid rgba(255,149,0,.2);border-radius:100px;font-size:12px;font-weight:500;color:#FF9500;margin-bottom:16px">⏸️ 开发完成 · 待ICP备案</div>
+      <div class="mockup-phone">
+        <div class="notch"></div>
+        <div class="sb"><span>9:41</span><span>🔋 88%</span></div>
+        <div class="content">
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 4px 12px;border-bottom:1px solid var(--border)">
+            <svg width="24" height="24" viewBox="0 0 512 512"><rect width="512" height="512" rx="60" fill="#D90000"/><g fill="none" stroke="#FFF" stroke-linecap="round"><rect x="226" y="100" width="60" height="24" rx="10" fill="#FFF" opacity=".92"/><line x1="256" y1="130" x2="130" y2="420" stroke-width="20" opacity=".82"/><line x1="256" y1="130" x2="382" y2="420" stroke-width="20" opacity=".82"/><path d="M130,420 A316 316 0 0 1 382 420" stroke-width="20" opacity=".82"/></g></svg>
+            <div><div style="font-size:14px;font-weight:600">超声设备AI引擎</div><div style="font-size:10px;color:var(--text-tertiary)">迈瑞内部 · 产品知识学习</div></div>
+          </div>
+          <div class="mp-chat" style="padding-top:12px">
+            <div class="msg ai"><div class="b"><span class="al">超声设备AI引擎</span>你好！我可以帮你查询超声设备参数、对比各品牌机型、解读技术概念，请问有什么可以帮助你的？</div></div>
+            <div class="msg ar"><div class="b">A20 这款设备有什么技术亮点？</div></div>
+            <div class="msg ai"><div class="b"><span class="al">超声设备AI引擎</span>迈瑞 A20 的核心技术亮点：<br><br><b>✅ 33MHz超高频</b> — 业界最高频线阵探头<br><b>✅ STVi粘弹成像</b> — 组织粘弹性定量评估<br><b>✅ USAT声衰减</b> — 超声衰减成像技术<br><b>✅ iFusion融合成像</b> — 多模态影像融合</div></div>
+          </div>
+          <div class="mp-chat"><div class="ib"><input type="text" placeholder="输入问题..."><button><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ICP备案说明 -->
+  <div class="reveal" style="margin-top:24px;padding:16px 20px;background:var(--card);border-radius:var(--radius-xl);border:1px solid var(--border);font-size:.85rem;color:var(--text-secondary);line-height:1.7">
+    <strong style="color:var(--text-primary)">📋 关于 ICP 备案与域名：</strong>
+    微信小程序发布需要完成 ICP 备案（互联网信息服务备案），目前备案正在办理中。
+    网页端通过腾讯云轻量服务器（162.14.105.253:8765）使用非标准端口规避备案要求，
+    搭配 Tailscale WireGuard 隧道穿透至内网 NAS，已实现公网可访问。
+  </div>
+</section>
+<!-- Architecture -->
+<section id="architecture">
+  <div class="section-center">
+    <div class="section-label">Architecture</div>
+    <h2 class="section-title">系统架构</h2>
+    <p class="section-sub">FastAPI 中继架构 — 前端不直连 AI，所有请求通过后端鉴权、过滤、审计</p>
+  </div>
+  <div class="arch-diagram reveal">
+    <button class="arch-scroll-btn left" id="archScrollLeft" aria-label="向左滚动"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="10 3 5 8 10 13"/></svg></button>
+    <div class="arch-diagram-inner" id="archScroll">
+    <div class="arch-flow">
+      <div class="arch-node cli"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="name">Web · 小程序</div><div class="desc">React + TypeScript / 原生小程序</div></div>
+      <div class="arch-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      <div class="arch-node gw"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h0M6 18h0"/></svg></div><div class="name">Nginx · Tailscale</div><div class="desc">反向代理 :8765 / WireGuard 隧道</div></div>
+      <div class="arch-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      <div class="arch-node core"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="name">FastAPI</div><div class="desc">JWT 鉴权 / 合规过滤 / 审计日志</div></div>
+      <div class="arch-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      <div class="arch-node ai-box"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="6"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div><div class="name">Dify RAG · Ollama</div><div class="desc">RAG 编排 / 知识库 / 本地 Embedding</div></div>
+      <div class="arch-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      <div class="arch-node ai-box"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="name">DeepSeek</div><div class="desc">LLM 推理引擎 / 流式输出</div></div>
+    </div>
+    </div>
+    <button class="arch-scroll-btn right" id="archScrollRight" aria-label="向右滚动"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></button>
+  </div>
+  <div class="flow-grid">
+    <div class="flow-box reveal d1"><b style="color:var(--accent)">⬅️ 请求流向</b><br>用户 → 腾讯云Nginx:8765 → Tailscale隧道 → NAS FastAPI (JWT验证/限流) → Dify (RAG检索+LLM调用)</div>
+    <div class="flow-box reveal d2"><b style="color:var(--accent)">➡️ 响应流向</b><br>DeepSeek → Dify → FastAPI (合规过滤/审计) → Tailscale → 腾讯云Nginx → 用户(SSE流式)</div>
+    <div class="flow-box reveal d3"><b style="color:var(--accent)">📦 部署</b><br>UGREEN NAS DXP4800Plus (Intel N100) · Docker · 腾讯云轻量服务器</div>
+  </div>
+</section>
+
+<!-- Tech Stack -->
+<section id="techstack">
+  <div class="section-center">
+    <div class="section-label">Tech Stack</div>
+    <h2 class="section-title">技术栈全景</h2>
+    <p class="section-sub">从后端到前端，从AI引擎到基础设施，全链路技术选型</p>
+  </div>
+  <h3 class="reveal" style="font-size:1rem;font-weight:600;margin-bottom:12px">后端</h3>
+  <div class="tech-grid" style="margin-bottom:32px">
+    <div class="tech-card reveal d1"><div class="iw">🐍</div><h4>Python 3.11</h4><p>FastAPI + Uvicorn</p></div>
+    <div class="tech-card reveal d2"><div class="iw">⚡</div><h4>FastAPI</h4><p>异步API框架</p></div>
+    <div class="tech-card reveal d3"><div class="iw">🔐</div><h4>PyJWT</h4><p>身份认证</p></div>
+    <div class="tech-card reveal d4"><div class="iw">📋</div><h4>SlowAPI</h4><p>速率限制</p></div>
+    <div class="tech-card reveal d5"><div class="iw">📄</div><h4>pypdf/docx</h4><p>文档解析</p></div>
+    <div class="tech-card reveal d6"><div class="iw">🔗</div><h4>httpx</h4><p>异步HTTP</p></div>
+  </div>
+  <h3 class="reveal d1" style="font-size:1rem;font-weight:600;margin-bottom:12px">前端</h3>
+  <div class="tech-grid" style="margin-bottom:32px">
+    <div class="tech-card reveal d1"><div class="iw">⚛️</div><h4>React 19</h4><p>UI框架</p></div>
+    <div class="tech-card reveal d2"><div class="iw">📘</div><h4>TypeScript</h4><p>类型安全</p></div>
+    <div class="tech-card reveal d3"><div class="iw">⚡</div><h4>Vite 8</h4><p>构建工具</p></div>
+    <div class="tech-card reveal d4"><div class="iw">🎨</div><h4>Tailwind v4</h4><p>样式引擎</p></div>
+    <div class="tech-card reveal d5"><div class="iw">🧊</div><h4>Zustand</h4><p>状态管理</p></div>
+    <div class="tech-card reveal d6"><div class="iw">🔄</div><h4>React Router</h4><p>路由</p></div>
+  </div>
+  <h3 class="reveal d2" style="font-size:1rem;font-weight:600;margin-bottom:12px">AI & 基础设施</h3>
+  <div class="tech-grid">
+    <div class="tech-card reveal d1"><div class="iw">🤖</div><h4>DeepSeek</h4><p>LLM引擎</p></div>
+    <div class="tech-card reveal d2"><div class="iw">📚</div><h4>Dify</h4><p>RAG编排平台</p></div>
+    <div class="tech-card reveal d3"><div class="iw">🤗</div><h4>Ollama</h4><p>本地 Embedding</p></div>
+    <div class="tech-card reveal d4"><div class="iw">🐳</div><h4>Docker</h4><p>容器化部署</p></div>
+    <div class="tech-card reveal d5"><div class="iw">🖥️</div><h4>UGREEN NAS</h4><p>绿联DXP4800Plus</p></div>
+    <div class="tech-card reveal d6"><div class="iw">🌐</div><h4>Nginx</h4><p>反向代理 :8765</p></div>
+    <div class="tech-card reveal d1"><div class="iw">☁️</div><h4>腾讯云</h4><p>轻量服务器 2C4G</p></div>
+    <div class="tech-card reveal d2"><div class="iw">🔒</div><h4>Tailscale</h4><p>WireGuard 隧道</p></div>
+    <div class="tech-card reveal d3"><div class="iw">📱</div><h4>微信小程序</h4><p>移动端(待ICP)</p></div>
+  </div>
+</section>
+
+
+<!-- Technical Highlights -->
+<section id="tech-highlights">
+  <div class="section-center">
+    <div class="section-label">Tech Highlights</div>
+    <h2 class="section-title">技术亮点</h2>
+    <p class="section-sub">从本地数据向量化到公网穿透，从 RAG 知识库到前端体验优化，全链路技术细节</p>
+  </div>
+  <div class="compliance-grid">
+
+    <!-- RAG Knowledge Base -->
+    <div class="comp-item reveal d1">
+      <div class="iw" style="background:var(--accent-hover)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>RAG 知识库构建</h3>
+      <p>基于 Dify 平台搭建企业级 RAG 知识库，涵盖迈瑞、GE、飞利浦等 12 个品牌的超声设备技术文档。知识库总规模 14GB，21,410 个知识块，覆盖产品规格书、探头参数、临床应用指南等多维度内容。</p>
+      <ul>
+        <li>Dify 编排平台管理文档嵌入与检索流程</li>
+        <li>多品牌竞品参数知识库（6+ 主流品牌全覆盖）</li>
+        <li>BM25 关键词 + TF-IDF 语义向量双路混合检索</li>
+        <li>6 类业务场景自动识别：参数对比/概念解读/设备查询等</li>
+      </ul>
+    </div>
+
+    <!-- Ollama Local Embedding -->
+    <div class="comp-item reveal d2">
+      <div class="iw" style="background:rgba(0,122,255,.1)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="6"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+      </div>
+      <h3>Ollama 本地化 Embedding</h3>
+      <p>使用 Ollama 在 NAS 本地运行 Embedding 模型，对医疗设备文档进行高精度向量化。所有数据在本机完成向量化处理，无需上传至外部 API，兼顾精度与数据安全。</p>
+      <ul>
+        <li>本地 Embedding 模型，数据不外传</li>
+        <li>医疗专业文档的领域适配向量化</li>
+        <li>Docker 部署在 NAS，与 Dify RAG 引擎无缝集成</li>
+        <li>支持增量文档更新与重向量化</li>
+      </ul>
+    </div>
+
+    <!-- Tencent Cloud + Tailscale -->
+    <div class="comp-item reveal d3">
+      <div class="iw" style="background:rgba(52,199,89,.1)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="1.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3>腾讯云反向代理 + Tailscale 公网穿透</h3>
+      <p>前端部署在家庭 NAS，通过腾讯云轻量服务器 + Tailscale WireGuard 隧道实现公网访问。非标准端口 8765 规避 ICP 备案限制，SSE 流式响应完美支持。</p>
+      <ul>
+        <li>腾讯云轻量服务器 2C4G（162.14.105.253）</li>
+        <li>Tailscale WireGuard 隧道加密传输</li>
+        <li>Nginx 反向代理配置 SSE 支持（proxy_buffering off）</li>
+        <li>非标准端口 :8765，无需 ICP 备案即可公网服务</li>
+      </ul>
+    </div>
+
+    <!-- Frontend Optimization -->
+    <div class="comp-item reveal d4">
+      <div class="iw" style="background:rgba(255,149,0,.1)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <h3>前端性能与体验优化</h3>
+      <p>React 19 + TypeScript + Vite 8 + Tailwind v4 技术栈，针对移动端和桌面端分别优化。Apple 设计风格，暗色模式支持，流式 AI 输出体验。</p>
+      <ul>
+        <li>移动端 100dvh 适配，视觉全屏无留白</li>
+        <li>响应式字体（移动 24px / 桌面 34px）</li>
+        <li>对话气泡宽度自适应（移动端 90%）</li>
+        <li>Zustand 状态管理 + React Router 路由</li>
+        <li>Apple 风格 UI 设计系统 + 暗色模式</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+<!-- Compliance -->
+<section id="compliance">
+  <div class="section-center">
+    <div class="section-label">Compliance & Security</div>
+    <h2 class="section-title">合规与安全体系</h2>
+    <p class="section-sub">全链路安全防护，确保AI输出合规、数据安全、可审计</p>
+  </div>
+  <div class="compliance-grid">
+    <div class="comp-item reveal d1"><div class="iw" style="background:var(--accent-hover)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>AI 输出合规过滤</h3><p>后端对每一条AI输出进行15类禁用话术扫描，命中则拦截并替换为合规提示。</p><ul><li>&ldquo;唯一可行&rdquo;、&ldquo;必须选用&rdquo;、&ldquo;排他性&rdquo;</li><li>&ldquo;指定机型&rdquo;、&ldquo;推荐锁定&rdquo;、&ldquo;控标&rdquo;</li><li>&ldquo;独家满足&rdquo;、&ldquo;只能用迈瑞&rdquo;</li></ul></div>
+    <div class="comp-item reveal d2"><div class="iw" style="background:rgba(0,122,255,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 9v4M12 17h0"/></svg></div><h3>审计日志系统</h3><p>每次AI调用都记录完整审计链，包含用户ID、时间戳、输入输出摘要。日志轮转保留6个月。</p><ul><li>用户 ID + 时间戳 + IP 地址</li><li>输入摘要（前200字）+ 输出摘要</li><li>文件操作完整审计链</li><li>日志不可篡改</li></ul></div>
+    <div class="comp-item reveal d3"><div class="iw" style="background:rgba(52,199,89,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><h3>身份认证与授权</h3><p>JWT Token认证 + 白名单预审机制，管理员审批新用户。Token支持服务端撤销。</p><ul><li>工号 + 姓名实名登录</li><li>管理员预审 + 审批</li><li>JWT 服务端撤销</li><li>无游客 / 外部访问入口</li></ul></div>
+    <div class="comp-item reveal d4"><div class="iw" style="background:rgba(255,149,0,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h3>安全防护体系</h3><p>多层防护：速率限制、CORS策略、安全头、文件魔数校验、请求体大小限制。</p><ul><li>SlowAPI 速率限制（10-30/min）</li><li>CSP / HSTS / X-Frame-Options</li><li>文件魔数校验防伪造</li><li>10MB 请求体限制</li></ul></div>
+  </div>
+</section>
+
+<!-- AI-Powered Dev -->
+<section id="ai-dev">
+  <div class="section-center">
+    <div class="section-label">AI-Powered Development</div>
+    <h2 class="section-title">AI 辅助开发工作流</h2>
+    <p class="section-sub">整个项目不仅 <b style="color:var(--text-primary)">产品本身由 AI 驱动</b>，<b style="color:var(--text-primary)">开发过程也大量使用 AI 工具</b>，从代码生成到代码审查，从架构设计到测试覆盖，全面拥抱 AI 时代的工作方式</p>
+  </div>
+  <div class="wf">
+    <div class="wf-step reveal d1"><div class="num">1</div><div class="icon">📋</div><h4>需求分析</h4><p>AI 辅助梳理需求、定义功能边界与合规架构</p></div>
+    <div class="wf-step reveal d2"><div class="num">2</div><div class="icon">🏗️</div><h4>架构设计</h4><p>architect agent 评估技术选型与系统架构</p></div>
+    <div class="wf-step reveal d3"><div class="num">3</div><div class="icon">✍️</div><h4>TDD 开发</h4><p>测试先行，planner + tdd-guide agent 驱动</p></div>
+    <div class="wf-step reveal d4"><div class="num">4</div><div class="icon">👁️</div><h4>代码审查</h4><p>code-reviewer + security-reviewer 自动审查</p></div>
+    <div class="wf-step reveal d5"><div class="num">5</div><div class="icon">🚀</div><h4>部署上线</h4><p>Docker 一键部署至个人 NAS</p></div>
+  </div>
+  <h3 class="reveal" style="font-size:1.05rem;font-weight:600;margin-bottom:16px">使用的 AI 工具链</h3>
+  <div class="ai-tools-grid">
+    <div class="ai-tool-card reveal d1"><div class="iw" style="background:rgba(217,0,0,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div><h3>Claude Code</h3><p>AI 编程助手，负责代码生成、重构、调试。通过自然语言交互完成全栈开发。</p><div class="tl"><span>代码生成</span><span>重构</span><span>调试</span></div></div>
+    <div class="ai-tool-card reveal d2"><div class="iw" style="background:rgba(0,122,255,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>ECC Agent 系统</h3><p>60+ 专业 Agent 自动协作。planner 规划、code-reviewer 审查、security-reviewer 安全扫描。</p><div class="tl"><span>60+ Agents</span><span>228 Skills</span><span>75 Commands</span></div></div>
+    <div class="ai-tool-card reveal d3"><div class="iw" style="background:rgba(52,199,89,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><h3>Dify</h3><p>AI 应用编排平台。管理 RAG 知识库、Prompt 模板、模型配置，提供统一 API 接口。</p><div class="tl"><span>RAG 编排</span><span>Prompt 管理</span></div></div>
+    <div class="ai-tool-card reveal d4"><div class="iw" style="background:rgba(255,149,0,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>DeepSeek</h3><p>底层大语言模型，提供中文医疗领域的专业问答能力，通过 Dify 接入 RAG 知识库增强。</p><div class="tl"><span>LLM</span><span>知识问答</span></div></div>
+  </div>
+</section>
+
+
+<!-- Chapter: Agent Module -->
+<div class="chapter-divider" id="ch2-agent">
+  <div class="chapter-divider-line"></div>
+  <div class="chapter-divider-label">Chapter 02</div>
+  <h2 class="chapter-divider-title">Agent 模块</h2>
+  <p class="chapter-divider-sub">多 Agent 协同架构、自动化任务编排与企业系统集成</p>
+</div>
+
+<!-- Career Transition -->
+<section id="transition">
+  <div class="section-center">
+    <div class="section-label">Career Path</div>
+    <h2 class="section-title">从医疗销售到 AI 落地实践者</h2>
+    <p class="section-sub">3 年迈瑞医疗超声设备销售经验，2025 年底全面转型 AI。不追求纸上谈兵的理论，从第一天开始动手——搭 Agent、做自动化、做内容。</p>
+  </div>
+  <div class="transition-story reveal">
+    <h3>不是"学 AI"，而是"用 AI 解决真实问题"</h3>
+    <p>3 年医疗设备销售经验，熟悉公立医院采购全链路。在几乎零 Python 基础的前提下，从 Agent 部署做到全自动浏览器监控，从写脚本做到内容创作。医疗销售的背景反而是优势——理解 B 端业务逻辑、懂客户需求拆解、知道产品从了解到成交的全链路。</p>
+    <p style="margin-top:10px">以下是我在这几个月里真正做出来的东西。</p>
+  </div>
+</section>
+
+<!-- Agent Overview -->
+<div style="max-width:1200px;margin:0 auto;padding:0 24px 48px">
+  <div class="section-center" style="margin-bottom:32px">
+    <h2 class="section-title" style="font-size:clamp(1.4rem,2.5vw,1.8rem)">4 Agent 集群 · 跨 Agent 共享记忆</h2>
+    <p class="section-sub">四个独立部署的 Agent 各司其职，通过 NAS SMB 共享存储实现跨 Agent 记忆同步，形成自我进化的分布式智能系统</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div class="bento-card reveal d1" style="margin:0">
+      <h3 style="display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Agent 集群</h3>
+      <p style="font-size:.88rem;color:var(--text-secondary);margin-bottom:12px">4 个独立部署的 Agent 各司其职：</p>
+      <ul style="list-style:none">
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:.85rem"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0"></span><strong style="color:var(--accent)">OpenClaw</strong> — PC 主力，全能型，浏览器+Office 自动化</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:.85rem"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#007AFF;flex-shrink:0"></span><strong style="color:#007AFF">Hermes</strong> — PC 协同，高密度推理与文档分析</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:.85rem"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#34C759;flex-shrink:0"></span><strong style="color:#34C759">NAS Hermes</strong> — 7&times;24 在线，文档处理专用</li>
+        <li style="padding:8px 0;display:flex;align-items:center;gap:8px;font-size:.85rem"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF9500;flex-shrink:0"></span><strong style="color:#FF9500">AutoClaw</strong> — 办公机，浏览器+邮件自动化</li>
+      </ul>
+    </div>
+    <div class="bento-card reveal d2" style="margin:0">
+      <h3 style="display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> 共享记忆系统</h3>
+      <p style="font-size:.88rem;color:var(--text-secondary);margin-bottom:12px">通过 NAS SMB 共享存储实现跨 Agent 记忆同步：</p>
+      <ul style="list-style:none">
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem">@ 每天 <strong>05:00</strong> 各 Agent 写入过去 24 小时工作记录</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem">@ 每天 <strong>05:30</strong> 各 Agent 读取其他 Agent 状态更新</li>
+        <li style="padding:8px 0;font-size:.85rem">@ 文件统一存储在 NAS <code style="background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12px">Z:\Agent共享数据\</code> 目录</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Agent System -->
+
+<section id="agent-system">
+  <div class="section-center">
+    <div class="section-label">ECC Plugin</div>
+    <h2 class="section-title">ECC Agent 系统架构</h2>
+    <p class="section-sub">基于 Claude Code 的 ECC (Everything Claude Code) 插件系统，构建了 60+ 专业 Agent、228 个技能、75 个命令、14 个 MCP 服务器的完整 AI 辅助开发生态</p>
+  </div>
+
+  <!-- Agent Stats -->
+  <div class="as reveal d1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:48px">
+    <div class="asc" style="background:var(--card);border-radius:var(--radius-xl);padding:28px 20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card)">
+      <div style="font-size:2.2rem;font-weight:700;color:var(--accent);letter-spacing:-.02em">60+</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-top:6px">专业 Agent</div>
+    </div>
+    <div class="asc" style="background:var(--card);border-radius:var(--radius-xl);padding:28px 20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card)">
+      <div style="font-size:2.2rem;font-weight:700;color:var(--accent);letter-spacing:-.02em">228</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-top:6px">技能</div>
+    </div>
+    <div class="asc" style="background:var(--card);border-radius:var(--radius-xl);padding:28px 20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card)">
+      <div style="font-size:2.2rem;font-weight:700;color:var(--accent);letter-spacing:-.02em">75</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-top:6px">命令</div>
+    </div>
+    <div class="asc" style="background:var(--card);border-radius:var(--radius-xl);padding:28px 20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card)">
+      <div style="font-size:2.2rem;font-weight:700;color:var(--accent);letter-spacing:-.02em">14</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-top:6px">MCP 服务器</div>
+    </div>
+  </div>
+
+  <h3 class="reveal d1" style="font-size:1.05rem;font-weight:600;margin-bottom:16px">Agent &#x5206;&#x7C7B;</h3>
+  <div class="reveal d2" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:32px">
+    <div class="ac" style="background:var(--card);border-radius:var(--radius-xl);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(217,0,0,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h4 style="font-size:.95rem;font-weight:600">&#x4EE3;&#x7801;&#x751F;&#x6210; Agent</h4></div>
+      <p style="font-size:.85rem;color:var(--text-secondary);line-height:1.7">code-generator&#x3001;refactor-cleaner&#x3001;code-simplifier &#x7B49; Agent &#x8D1F;&#x8D23;&#x4EE3;&#x7801;&#x751F;&#x6210;&#x3001;&#x91CD;&#x6784;&#x548C;&#x4F18;&#x5316;&#x3002;</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(217,0,0,.08);color:var(--accent)">code-generator</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(217,0,0,.08);color:var(--accent)">refactor-cleaner</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(217,0,0,.08);color:var(--accent)">code-simplifier</span></div>
+    </div>
+    <div class="ac" style="background:var(--card);border-radius:var(--radius-xl);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(0,122,255,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><h4 style="font-size:.95rem;font-weight:600">&#x6784;&#x5EFA;&#x4E0E;&#x6784;&#x5EFA;&#x4FEE;&#x590D;</h4></div>
+      <p style="font-size:.85rem;color:var(--text-secondary);line-height:1.7">&#x5404;&#x8BED;&#x8A00;&#x7684; build-resolver Agent&#xFF08;git&#x3001;rust&#x3001;swift&#x3001;dart&#x3001;go &#x7B49;&#xFF09;&#x81EA;&#x52A8;&#x8BCA;&#x65AD;&#x5E76;&#x4FEE;&#x590D;&#x6784;&#x5EFA;&#x9519;&#x8BEF;&#x3002;</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(0,122,255,.08);color:#007AFF">build-error-resolver</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(0,122,255,.08);color:#007AFF">rust-build-resolver</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(0,122,255,.08);color:#007AFF">swift-build-resolver</span></div>
+    </div>
+    <div class="ac" style="background:var(--card);border-radius:var(--radius-xl);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(52,199,89,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><h4 style="font-size:.95rem;font-weight:600">&#x6D4B;&#x8BD5; Agent</h4></div>
+      <p style="font-size:.85rem;color:var(--text-secondary);line-height:1.7">tdd-guide&#x3001;e2e-runner&#x3001;pr-test-analyzer &#x7B49; Agent &#x4FDD;&#x969C;&#x4EE3;&#x7801;&#x8D28;&#x91CF;&#x548C;&#x6D4B;&#x8BD5;&#x8986;&#x76D6;&#x3002;</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(52,199,89,.08);color:#34C759">tdd-guide</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(52,199,89,.08);color:#34C759">e2e-runner</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(52,199,89,.08);color:#34C759">pr-test-analyzer</span></div>
+    </div>
+    <div class="ac" style="background:var(--card);border-radius:var(--radius-xl);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,149,0,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/></svg></div><h4 style="font-size:.95rem;font-weight:600">&#x4EE3;&#x7801;&#x5BA1;&#x67E5; Agent</h4></div>
+      <p style="font-size:.85rem;color:var(--text-secondary);line-height:1.7">&#x8BED;&#x8A00;&#x4E13;&#x7CBE; reviewer + security-reviewer &#x8986;&#x76D6;&#x5B89;&#x5168;&#x3001;&#x8D28;&#x91CF;&#x3001;&#x6027;&#x80FD;&#x7B49;&#x591A;&#x7EF4;&#x5EA6;&#x5BA1;&#x67E5;&#x3002;</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(255,149,0,.08);color:#FF9500">code-reviewer</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(255,149,0,.08);color:#FF9500">security-reviewer</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(255,149,0,.08);color:#FF9500">typescript-reviewer</span></div>
+    </div>
+    <div class="ac" style="background:var(--card);border-radius:var(--radius-xl);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(175,82,222,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#AF52DE" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="6"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div><h4 style="font-size:.95rem;font-weight:600">&#x67B6;&#x6784;&#x4E0E;&#x89C4;&#x5212; Agent</h4></div>
+      <p style="font-size:.85rem;color:var(--text-secondary);line-height:1.7">planner&#x3001;architect&#x3001;code-architect &#x7B49; Agent &#x8D1F;&#x8D23;&#x6280;&#x672F;&#x65B9;&#x6848;&#x8BBE;&#x8BA1;&#x548C;&#x5B9E;&#x73B0;&#x89C4;&#x5212;&#x3002;</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(175,82,222,.08);color:#AF52DE">planner</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(175,82,222,.08);color:#AF52DE">architect</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(175,82,222,.08);color:#AF52DE">code-architect</span></div>
+    </div>
+    <div class="ac" style="background:var(--card);border-radius:var(--radius-xl);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(90,200,250,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4 style="font-size:.95rem;font-weight:600">&#x4E13;&#x4E1A;&#x9886;&#x57DF; Agent</h4></div>
+      <p style="font-size:.85rem;color:var(--text-secondary);line-height:1.7">&#x591A;&#x8BED;&#x8A00; reviewer &#x4EE5;&#x53CA; Flutter&#x3001;HarmonyOS&#x3001;&#x6570;&#x636E;&#x5E93;&#x3001;MLE&#x3001;&#x533B;&#x7597;&#x5408;&#x89C4;&#x7B49;&#x9886;&#x57DF; Agent&#x3002;</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(90,200,250,.08);color:#5AC8FA">flutter-reviewer</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(90,200,250,.08);color:#5AC8FA">harmonyos-app</span><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;background:rgba(90,200,250,.08);color:#5AC8FA">database-reviewer</span></div>
+    </div>
+  </div>
+
+  <h3 class="reveal d2" style="font-size:1.05rem;font-weight:600;margin-bottom:16px">&#x94A9;&#x5B50;&#x7CFB;&#x7EDF;&#xFF08;Hooks&#xFF09;</h3>
+  <div class="reveal d3" style="background:var(--card);border-radius:var(--radius-2xl);padding:32px;border:1px solid var(--border);box-shadow:var(--shadow-card);margin-bottom:32px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
+      <div><div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(217,0,0,.1);margin-bottom:10px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><h4 style="font-size:.9rem;font-weight:600;margin-bottom:6px">PreToolUse &#x94A9;&#x5B50;</h4><p style="font-size:.82rem;color:var(--text-secondary);line-height:1.6">&#x5DE5;&#x5177;&#x6267;&#x884C;&#x524D;&#x89E6;&#x53D1;&#xFF1A;&#x9A8C;&#x8BC1;&#x53C2;&#x6570;&#x3001;&#x7C7B;&#x578B;&#x68C0;&#x67E5;&#x3001;&#x6587;&#x4EF6;&#x5927;&#x5C0F;&#x9650;&#x5236;&#x3002;&#x9632;&#x6B62;&#x9519;&#x8BEF;&#x64CD;&#x4F5C;&#x548C;&#x8D8A;&#x754C;&#x5199;&#x5165;&#x3002;</p></div>
+      <div><div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(0,122,255,.1);margin-bottom:10px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><h4 style="font-size:.9rem;font-weight:600;margin-bottom:6px">PostToolUse &#x94A9;&#x5B50;</h4><p style="font-size:.82rem;color:var(--text-secondary);line-height:1.6">&#x5DE5;&#x5177;&#x6267;&#x884C;&#x540E;&#x89E6;&#x53D1;&#xFF1A;&#x81EA;&#x52A8;&#x683C;&#x5F0F;&#x5316;&#x3001;lint &#x68C0;&#x67E5;&#x3001;&#x7C7B;&#x578B;&#x68C0;&#x67E5;&#x3002;&#x6BCF;&#x6B21;&#x7F16;&#x8F91;&#x540E;&#x4FDD;&#x6301;&#x4EE3;&#x7801;&#x4E00;&#x81F4;&#x3002;</p></div>
+      <div><div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(52,199,89,.1);margin-bottom:10px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><h4 style="font-size:.9rem;font-weight:600;margin-bottom:6px">Stop &#x94A9;&#x5B50;</h4><p style="font-size:.82rem;color:var(--text-secondary);line-height:1.6">&#x4F1A;&#x8BDD;&#x7ED3;&#x675F;&#x65F6;&#x89E6;&#x53D1;&#xFF1A;&#x6700;&#x7EC8;&#x6784;&#x5EFA;&#x9A8C;&#x8BC1;&#x3001;&#x6D4B;&#x8BD5;&#x8FD0;&#x884C;&#x3001;&#x6743;&#x9650;&#x6E05;&#x7406;&#x3002;</p></div>
+      <div><div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(255,149,0,.1);margin-bottom:10px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><h4 style="font-size:.9rem;font-weight:600;margin-bottom:6px">Session &#x94A9;&#x5B50;</h4><p style="font-size:.82rem;color:var(--text-secondary);line-height:1.6">&#x8DE8;&#x4F1A;&#x8BDD;&#x6301;&#x4E45;&#x5316;&#xFF1A;&#x73AF;&#x5883;&#x521D;&#x59CB;&#x5316;&#x3001;&#x5185;&#x5B58;&#x4E0A;&#x4E0B;&#x6587;&#x6062;&#x590D;&#x3001;&#x8FDC;&#x7A0B;&#x4EE3;&#x7406;&#x7F16;&#x6392;&#x3002;</p></div>
+    </div>
+  </div>
+
+  <h3 class="reveal d3" style="font-size:1.05rem;font-weight:600;margin-bottom:16px">MCP &#x670D;&#x52A1;&#x5668;&#x751F;&#x6001;</h3>
+  <div class="reveal d4" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:32px">
+    <div style="display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--radius-xl);padding:16px 20px;border:1px solid var(--border)">
+      <div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(217,0,0,.1);flex-shrink:0"><span style="font-size:14px;font-weight:700;color:var(--accent)">GH</span></div>
+      <div><h4 style="font-size:.85rem;font-weight:600">GitHub MCP</h4><p style="font-size:.78rem;color:var(--text-secondary)">&#x4ED3;&#x5E93;&#x7BA1;&#x7406;&#x3001;PR/Issue &#x64CD;&#x4F5C;&#x3001;&#x4EE3;&#x7801;&#x641C;&#x7D22;</p></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--radius-xl);padding:16px 20px;border:1px solid var(--border)">
+      <div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(0,122,255,.1);flex-shrink:0"><span style="font-size:14px;font-weight:700;color:#007AFF">EX</span></div>
+      <div><h4 style="font-size:.85rem;font-weight:600">Exa Search</h4><p style="font-size:.78rem;color:var(--text-secondary)">Web &#x641C;&#x7D22;&#x4E0E;&#x5185;&#x5BB9;&#x83B7;&#x53D6;</p></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--radius-xl);padding:16px 20px;border:1px solid var(--border)">
+      <div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(52,199,89,.1);flex-shrink:0"><span style="font-size:14px;font-weight:700;color:#34C759">C7</span></div>
+      <div><h4 style="font-size:.85rem;font-weight:600">Context7</h4><p style="font-size:.78rem;color:var(--text-secondary)">&#x5E93;&#x6587;&#x6863;&#x68C0;&#x7D22;&#x4E0E;&#x4EE3;&#x7801;&#x793A;&#x4F8B;&#x67E5;&#x8BE2;</p></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--radius-xl);padding:16px 20px;border:1px solid var(--border)">
+      <div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(175,82,222,.1);flex-shrink:0"><span style="font-size:14px;font-weight:700;color:#AF52DE">PW</span></div>
+      <div><h4 style="font-size:.85rem;font-weight:600">Playwright</h4><p style="font-size:.78rem;color:var(--text-secondary)">&#x6D4F;&#x89C8;&#x5668;&#x81EA;&#x52A8;&#x5316;&#x4E0E; E2E &#x6D4B;&#x8BD5;</p></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--radius-xl);padding:16px 20px;border:1px solid var(--border)">
+      <div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(255,149,0,.1);flex-shrink:0"><span style="font-size:14px;font-weight:700;color:#FF9500">MM</span></div>
+      <div><h4 style="font-size:.85rem;font-weight:600">Memory MCP</h4><p style="font-size:.78rem;color:var(--text-secondary)">&#x77E5;&#x8BC6;&#x56FE;&#x8C31;&#x6301;&#x4E45;&#x5316;&#x4E0E;&#x8BB0;&#x5FC6;&#x7BA1;&#x7406;</p></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--radius-xl);padding:16px 20px;border:1px solid var(--border)">
+      <div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(90,200,250,.1);flex-shrink:0"><span style="font-size:14px;font-weight:700;color:#5AC8FA">ST</span></div>
+      <div><h4 style="font-size:.85rem;font-weight:600">Sequential Thinking</h4><p style="font-size:.78rem;color:var(--text-secondary)">&#x7ED3;&#x6784;&#x5316;&#x63A8;&#x7406;&#x4E0E;&#x95EE;&#x9898;&#x5206;&#x89E3;</p></div>
+    </div>
+  </div>
+
+
+<!-- Multi-Agent Deployment -->
+<section id="agent-deploy">
+  <div class="section-center">
+    <div class="section-label">Multi-Agent</div>
+    <h2 class="section-title">AI Agent 矩阵</h2>
+    <p class="section-sub">从搭建到运营，独立完成多 Agent 系统的部署、配置与日常运维</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:40px">
+    <div class="project-card reveal d1">
+      <div class="icon-wrap" style="background:rgba(217,0,0,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <h3>OpenClaw <span style="font-size:11px;color:var(--text-tertiary);font-weight:400">PC 主力</span></h3>
+      <div class="desc">全能型 Agent。负责 Python 教学、内容创作、信息整理、Agent 运维、求职辅助、日常对话。搭载浏览器自动化、邮件、Office 等全套工具链。</div>
+    </div>
+    <div class="project-card reveal d2">
+      <div class="icon-wrap" style="background:rgba(0,122,255,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="6"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div>
+      <h3>Hermes <span style="font-size:11px;color:var(--text-tertiary);font-weight:400">PC</span></h3>
+      <div class="desc">同级配合，全能型。高密度推理任务、文档深度分析、复杂指令分解。与 OpenClaw 形成双核协同。</div>
+    </div>
+    <div class="project-card reveal d3">
+      <div class="icon-wrap" style="background:rgba(52,199,89,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="1.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <h3>NAS Hermes <span style="font-size:11px;color:var(--text-tertiary);font-weight:400">7×24</span></h3>
+      <div class="desc">文档处理专用。工作产品资料、文档理解、研报分析。捉放在 NAS 上 7×24 运行，完美胜任重载文档工作负荷。</div>
+    </div>
+    <div class="project-card reveal d4">
+      <div class="icon-wrap" style="background:rgba(255,149,0,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="1.5" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <h3>AutoClaw <span style="font-size:11px;color:var(--text-tertiary);font-weight:400">办公机</span></h3>
+      <div class="desc">浏览器自动化专用。网页操作、邮件、SAP Fiori 对接、招标网、网盘操作。锁屏状态下亦可运行。</div>
+    </div>
+  </div>
+  <h3 class="reveal d1" style="font-size:1.05rem;font-weight:600;margin-bottom:16px">AI Agent 能力总览</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:32px">
+    <div class="feature-card reveal d1">
+      <div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <h3>浏览器自动化</h3>
+      <p>通过 Chrome CDP 远程控制浏览器，自动登录、导航、填表、采集数据。落地场景：千里马招标网定时爬取 → 自动分析超声设备招标机会 → 推送飞书。</p>
+      <span class="tag">Chrome CDP</span>
+    </div>
+    <div class="feature-card reveal d2">
+      <div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+      <h3>邮件自动化</h3>
+      <p>通过 Outlook COM 接口操作公司邮箱，锁屏状态下亦可运行。每日 12:00 自动汇总当日邮件 → 分类整理 → 推送飞书。</p>
+      <span class="tag">Outlook COM</span>
+    </div>
+    <div class="feature-card reveal d3">
+      <div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h0M6 18h0"/></svg></div>
+      <h3>企业系统操作</h3>
+      <p>通过浏览器自动化操控 SAP Fiori（MCRM），完成活动计划查看、创建、提交闭环。语音指令 → 自动提交当日活动计划。</p>
+      <span class="tag">SAP Fiori</span>
+    </div>
+    <div class="feature-card reveal d1">
+      <div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      <h3>IM Bot 集成</h3>
+      <p>深度集成飞书开放平台，打通 IM、日历、文档、任务、多维表格 API。语音对话控制 → 读写日程/文档/任务。</p>
+      <span class="tag">飞书 API</span>
+    </div>
+    <div class="feature-card reveal d2">
+      <div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <h3>定时任务编排</h3>
+      <p>Cron 调度器驱动自动化任务定时执行。 05:00→共享记忆写入 / 12:00→邮件汇总 / 13:00+20:00→招标监测。</p>
+      <span class="tag">Cron</span>
+    </div>
+    <div class="feature-card reveal d3">
+      <div class="iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <h3>跨 Agent 协同</h3>
+      <p>四 Agent 架构（PC×2 + NAS + 办公机），通过 NAS SMB 共享存储实现记忆同步。05:00写入状态 / 05:30读取同步。</p>
+      <span class="tag">NAS SMB</span>
+    </div>
+  </div>
+  <h3 class="reveal d1" style="font-size:1.05rem;font-weight:600;margin-bottom:16px">系统架构</h3>
+  <div class="reveal d2" style="background:var(--card);border-radius:var(--radius-2xl);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-card)">
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+      <thead>
+        <tr style="background:var(--surface);border-bottom:1px solid var(--border)">
+          <th style="padding:14px 20px;text-align:left;font-weight:600;color:var(--text-secondary)">节点</th>
+          <th style="padding:14px 20px;text-align:left;font-weight:600;color:var(--text-secondary)">角色</th>
+          <th style="padding:14px 20px;text-align:left;font-weight:600;color:var(--text-secondary)">职责</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 20px;font-weight:500">PC 台机</td><td style="padding:12px 20px;color:var(--accent);font-weight:500">OpenClaw</td><td style="padding:12px 20px;color:var(--text-secondary)">浏览器自动操作、邮件/Office 自动化、定时任务调度</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 20px;font-weight:500">PC 台机</td><td style="padding:12px 20px;color:#007AFF;font-weight:500">Hermes</td><td style="padding:12px 20px;color:var(--text-secondary)">高密度推理任务、文档深度分析、复杂指令分解</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 20px;font-weight:500">家庭 NAS</td><td style="padding:12px 20px;color:#34C759;font-weight:500">NAS Hermes</td><td style="padding:12px 20px;color:var(--text-secondary)">7×24 在线、文档分析集群、共享记忆中枢</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 20px;font-weight:500">公司电脑</td><td style="padding:12px 20px;color:#FF9500;font-weight:500">AutoClaw</td><td style="padding:12px 20px;color:var(--text-secondary)">浏览器+COM 自动化、邮件操作、SAP Fiori 对接</td></tr>
+        <tr><td style="padding:12px 20px;font-weight:500">NAS SMB</td><td style="padding:12px 20px;color:var(--text-tertiary)">存储层</td><td style="padding:12px 20px;color:var(--text-secondary)">跨 Agent 记忆同步、05:00写/05:30读</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- Automation Projects -->
+<section id="automation">
+  <div class="section-center">
+    <div class="section-label">Projects</div>
+    <h2 class="section-title">自动化实战项目</h2>
+    <p class="section-sub">用 AI Agent 解决真实业务问题——从招标监控到微信自动化到医疗知识库</p>
+  </div>
+  <div class="project-card reveal d1" style="margin-bottom:20px">
+    <div class="icon-wrap" style="background:rgba(217,0,0,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+    <h3>千里马招标智能监测系统</h3>
+    <div class="sub">基于浏览器自动化的每日超声设备招标信息监控</div>
+    <div class="desc"><strong>背景：</strong>迈瑞销售期间负责达州、巴中地区，每天需手动查看千里马招标网上彩超相关招标信息，按地区和日期筛选。耗时且容易遗漏。</div>
+    <div class="desc"><strong>技术实现：</strong>Chrome CDP 远程控制 → 自动登录千里马高级会员 → 4组查询（当天/昨天 × 达州/巴中）→ AI 分析命中结果 → 飞书推送。每次操作间隔 1-3秒模拟真人，避免触发风控。</div>
+    <div class="desc" style="padding:12px 16px;background:var(--surface);border-radius:12px;margin-bottom:12px">
+      <strong>监测成果：</strong><br>
+      • 达州市第一人民医院 198万元彩超×2批次<br>
+      • 渠县人民医院 472万元超声设备<br>
+      • 通川区中医院 床旁彩超机 20万元
+    </div>
+    <div class="tags"><span>Chrome CDP</span><span>浏览器自动化</span><span>Cron</span><span>飞书推送</span></div>
+  </div>
+  <div class="project-card reveal d2" style="margin-bottom:20px">
+    <div class="icon-wrap" style="background:rgba(0,122,255,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M12 15h0M17 15h0"/></svg></div>
+    <h3>微信 Windows 客户端 GUI 自动化</h3>
+    <div class="sub">PostMessage 突破 Qt5+DirectUI 重金属，实现微信自动发送</div>
+    <div class="desc"><strong>背景：</strong>微信 Windows 客户端使用 Qt5 框架 + 自研 DirectUI 渲染，标准 uiautomation 找不到任何子控件，所有常规方案全部失效。</div>
+    <div class="desc"><strong>技术路线迭代：</strong><br>
+    ✖ uiautomation → 找不到子控件<br>
+    ✖ keybd_event → 被现代 Windows/微信过滤<br>
+    ✖ SendInput → 需要前台窗口权限<br>
+    ✔ PostMessage WM_CHAR → Qt5 正确路由到焦点控件</div>
+    <div class="tags"><span>win32api</span><span>PostMessage</span><span>Qt5</span><span>DirectUI</span><span>Python</span></div>
+  </div>
+  <div class="project-card reveal d3" style="margin-bottom:40px">
+    <div class="icon-wrap" style="background:rgba(52,199,89,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+    <h3>招标参数品牌归属判定</h3>
+    <div class="sub">RAG 知识库 + BM25+TF-IDF 双路混合检索</div>
+    <div class="desc"><strong>背景：</strong>医疗招投标中，拿到一份数百条技术参数的招标文件，第一件事是判断这是哪个品牌的“锁标参数”。人工翻资料比对通常需要 1-2 天。</div>
+    <div class="desc"><strong>方案：</strong>搭建了 12 品牌竞品知识库（14GB，21410 个知识块），开发 BM25+TF-IDF 双路混合 RAG 检索引擎。未见过的招标参数，5 分钟完成品牌归属判定，附带逐条证据链分析报告。</div>
+    <div class="tags"><span>RAG</span><span>BM25</span><span>TF-IDF</span><span>知识库</span><span>医疗招投标</span></div>
+  </div>
+  <h3 class="reveal d1" style="font-size:1.05rem;font-weight:600;margin-bottom:4px">效率对比</h3>
+  <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:16px">覆盖 Agent 自动化项目与招投标工作流的效率提升数据</p>
+  <div class="reveal d2" style="overflow-x:auto">
+    <table class="eff-table">
+      <thead>
+        <tr><th>业务场景</th><th>原来耗时</th><th>现在耗时</th><th>提速</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>招标参数品牌判定</td><td>1-2 天翻资料比对</td><td>5 分钟，附带证据链报告</td><td class="num">~50x</td></tr>
+        <tr><td>质疑函撰写</td><td>2-3 天</td><td>30 分钟，法规准确、格式合规</td><td class="num">~20x</td></tr>
+        <tr><td>参数改写（打包）</td><td>半天逐个翻规格书</td><td>一次性读完源文件后批量生成</td><td class="num">~5x</td></tr>
+        <tr><td>竞品新品调研</td><td>3-5 天逐个网查 + 手动整理</td><td>1 小时多路并发 + 自动入库</td><td class="num">~15x</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- Chapter: About Me -->
+<div class="chapter-divider">
+  <div class="chapter-divider-line"></div>
+  <div class="chapter-divider-label">Chapter 03</div>
+  <h2 class="chapter-divider-title">关于我</h2>
+  <p class="chapter-divider-sub">个人背景、技能与项目亮点</p>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="section-center">
+    <div class="section-label">About Me</div>
+    <h2 class="section-title">刘朕廷</h2>
+    <p class="section-sub">将医疗行业经验与 AI 工程能力结合，做能解决真实问题的产品</p>
+  </div>
+
+  <!-- Personal narrative - full width -->
+  <div style="max-width:680px;margin:0 auto 48px">
+    <div class="about-card reveal" style="text-align:center;padding:40px">
+      <div style="width:72px;height:72px;border-radius:50%;background:var(--accent-hover);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;border:2px solid rgba(217,0,0,.15)">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D90000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <p style="font-size:1rem;color:var(--text-secondary);line-height:1.9;max-width:560px;margin:0 auto 20px">
+        <strong style="color:var(--text-primary)">电子科技大学</strong> 生物医学工程本科 · <strong style="color:var(--text-primary)">3 年迈瑞医疗</strong> 超声设备销售      </p>
+      <p style="font-size:.92rem;color:var(--text-secondary);line-height:1.8;max-width:560px;margin:0 auto 24px">
+        2025 年底全面转型 AI。不追求纸上谈兵的理论，从第一天开始动手——搭 Agent、做自动化、做内容。<br>
+        将医疗器械行业积累的 <strong style="color:var(--text-primary)">domain knowledge</strong> 与 <strong style="color:var(--text-primary)">AI 工程能力</strong> 深度融合，构建了从知识管理到实战落地的完整 AI 应用体系。
+      </p>
+      <div class="skill-tags" style="justify-content:center">
+        <span>Python / FastAPI</span><span>React / TypeScript</span><span>Dify / RAG</span>
+        <span>Claude Code</span><span>ECC Agents</span><span>Docker / NAS</span>
+        <span>微信小程序</span><span>PostMessage / Win32</span><span>Tailscale / Nginx</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics row -->
+  <div class="reveal d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px">
+    <div style="background:var(--card);border-radius:var(--radius-xl);padding:28px 20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:-.02em">~50x</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px">业务效率提升</div>
+    </div>
+    <div style="background:var(--card);border-radius:var(--radius-xl);padding:28px 20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:-.02em">14GB</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px">知识库资产</div>
+    </div>
+    <div style="background:var(--card);border-radius:var(--radius-xl);padding:28px 20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:-.02em">4</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px">Agent 协同</div>
+    </div>
+    <div style="background:var(--card);border-radius:var(--radius-xl);padding:28px 20px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-card);transition:all .3s var(--ease-apple)">
+      <div style="font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:-.02em">9天</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px">从零到生产</div>
+    </div>
+  </div>
+
+  <!-- 2x2 Highlights -->
+  <h3 class="reveal" style="font-size:1.05rem;font-weight:600;margin-bottom:20px;text-align:center">核心能力</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="comp-item reveal d1" style="margin:0"><div class="iw" style="background:rgba(0,122,255,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>安全合规体系</h3><p>JWT 认证 + 白名单机制、AI 输出合规过滤（15 类禁用话术）、完整审计日志、速率限制、CORS 安全头。全链路安全防护，满足企业级合规要求。</p></div>
+    <div class="comp-item reveal d2" style="margin:0"><div class="iw" style="background:rgba(52,199,89,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3>全链路部署</h3><p>从 Docker 容器化到 NAS 部署，从腾讯云反向代理到 Tailscale 隧道穿透。FastAPI 中继架构，前端不直连 AI，所有请求通过后端鉴权、过滤、审计。</p></div>
+    <div class="comp-item reveal d3" style="margin:0"><div class="iw" style="background:rgba(255,149,0,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>多端覆盖</h3><p>Web 端（PC + 移动）已上线灰度测试，微信小程序开发完成待 ICP 备案。同一套后端 API 双端复用，UI 与交互体验保持一致。</p></div>
+    <div class="comp-item reveal d4" style="margin:0"><div class="iw" style="background:rgba(175,82,222,.1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#AF52DE" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="6"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div><h3>AI 全流程赋能</h3><p>产品本身由 AI 驱动（DeepSeek + RAG），开发过程也由 AI 工具全流程赋能：Claude Code 编程、ECC Agents 代码审查、TDD 测试覆盖。</p></div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="fl">
+    <svg width="20" height="20" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#D90000"/><g fill="none" stroke="#FFF" stroke-linecap="round"><rect x="226" y="100" width="60" height="24" rx="10" fill="#FFF" opacity=".92"/><line x1="256" y1="130" x2="130" y2="420" stroke-width="20" opacity=".82"/><line x1="256" y1="130" x2="382" y2="420" stroke-width="20" opacity=".82"/><path d="M130,420 A316 316 0 0 1 382 420" stroke-width="20" opacity=".82"/></g></svg>
+    <span style="font-weight:600;font-size:14px">超声设备AI引擎</span>
+  </div>
+  <p>刘朕廷 · 项目展示</p>
+  <p style="font-size:12px">在 AI 时代，利用 AI 工具，创造 AI 产品</p>
+</footer>
+
+<script>
+let lastScroll=0;const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{const c=window.scrollY;if(c>lastScroll&&c>100)navbar.classList.add('hidden');else navbar.classList.remove('hidden');lastScroll=c});
+const ro=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');if(e.target.classList.contains('section-center'))e.target.classList.add('in-view')}})},{threshold:.15});
+document.querySelectorAll('.reveal,.section-center').forEach(e=>ro.observe(e));
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));t&&t.scrollIntoView({behavior:'smooth',block:'start'})})});
+const as=document.getElementById('archScroll'),al=document.getElementById('archScrollLeft'),ar=document.getElementById('archScrollRight');
+if(as&&al&&ar){const u=()=>{al.classList.toggle('visible',as.scrollLeft>10);ar.classList.toggle('visible',as.scrollLeft<as.scrollWidth-as.clientWidth-10)};as.addEventListener('scroll',u);al.addEventListener('click',()=>as.scrollBy({left:-300,behavior:'smooth'}));ar.addEventListener('click',()=>as.scrollBy({left:300,behavior:'smooth'}));setTimeout(u,200)}
+</script>
+</body>
+</html>
